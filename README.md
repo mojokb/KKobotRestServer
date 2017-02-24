@@ -1,5 +1,5 @@
 # KKobotRestServer
-SpringBoot 으로 만든 카카톡 옐로우 아이디 자동응답 RestServer입니다.
+SpringBoot 으로 만든 카카톡 옐로우 아이디 자동응답 RestServer 예제 입니다.
 
 keyboard,
 messsage
