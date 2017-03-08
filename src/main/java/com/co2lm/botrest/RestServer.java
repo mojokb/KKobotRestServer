@@ -1,23 +1,15 @@
 package com.co2lm.botrest;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.services.rekognition.AmazonRekognitionClient;
-import com.amazonaws.services.rekognition.model.AmazonRekognitionException;
-import com.amazonaws.services.rekognition.model.DetectLabelsRequest;
-import com.amazonaws.services.rekognition.model.DetectLabelsResult;
-import com.amazonaws.services.rekognition.model.Image;
-import com.amazonaws.util.IOUtils;
 import com.co2lm.botrest.domain.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
-import java.nio.ByteBuffer;
 
 
 /**
@@ -74,8 +66,34 @@ public class RestServer {
             return resultMessage;
 
         }else {
-            message.setText("일단 정우성이랑 닮았는지 사진 먼저 보내봐 ");
-            resultMessage.setMessage(message);
+            //사용자가 정우성이란 말을 입력했을때
+            if("정우성".equals(userMessage.getContent())){
+                //JSOUP으로 파싱
+                Document doc = null;
+                try {
+                    doc = Jsoup.connect("http://tenasia.hankyung.com/archives/828634").get();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Elements picture = doc.select(".wp-image-828927");
+                System.out.println(" picture.size() " + picture.size());
+                for(Element pic: picture){
+
+                    if("정우성(1)".equals(pic.attr("alt"))){
+                        Photo photo1 = new Photo();
+                        photo1.setUrl(pic.attr("src"));
+                        photo1.setWidth(300);photo1.setHeight(300);
+                        message.setPhoto(photo1);
+                        messageButton.setLabel("정우성을 알고 싶어?");
+                        messageButton.setUrl("http://namu.wiki/w/정우성");
+                        message.setMessage_button(messageButton);
+                    }
+                }
+
+            } else {
+                message.setText("일단 정우성이랑 닮았는지 사진 먼저 보내봐 ");
+                resultMessage.setMessage(message);
+            }
             return resultMessage;
         }
 
