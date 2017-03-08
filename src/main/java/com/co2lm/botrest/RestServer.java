@@ -41,6 +41,7 @@ public class RestServer {
 
         Message message = new Message();
         Photo photo = new Photo();
+        Photo photo1 = new Photo();
         MessageButton messageButton = new MessageButton();
 
         //사용자가 사진을 던질시 텍스트, 던진사진, 이동시킬 링크를 보낸다
@@ -77,16 +78,21 @@ public class RestServer {
                 }
                 Elements picture = doc.select(".wp-image-828927");
                 System.out.println(" picture.size() " + picture.size());
+                System.out.println(" picture.toString() " + picture.toString());
                 for(Element pic: picture){
-
+                    System.out.println(" pic.attr(\"alt\") " + pic.attr("alt"));
                     if("정우성(1)".equals(pic.attr("alt"))){
-                        Photo photo1 = new Photo();
+                        System.out.println(" pic.attr(\"src\") " + pic.attr("src"));
+
                         photo1.setUrl(pic.attr("src"));
                         photo1.setWidth(300);photo1.setHeight(300);
                         message.setPhoto(photo1);
+
                         messageButton.setLabel("정우성을 알고 싶어?");
                         messageButton.setUrl("http://namu.wiki/w/정우성");
                         message.setMessage_button(messageButton);
+
+                        resultMessage.setMessage(message);
                     }
                 }
 
