@@ -1,5 +1,7 @@
 package com.co2lm.botrest.domain;
 
+import java.util.List;
+
 /**
  * @author Myouhgwhan Lee on 2017. 2. 14..
  */
