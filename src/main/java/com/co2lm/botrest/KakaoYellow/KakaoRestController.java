@@ -1,10 +1,12 @@
 package com.co2lm.botrest.KakaoYellow;
 
+import com.co2lm.botrest.aws.AwsService;
 import com.co2lm.botrest.domain.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +19,9 @@ import java.io.IOException;
  */
 @RestController
 public class KakaoRestController {
+
+    @Autowired
+    AwsService awsService;
 
     @RequestMapping(value = "/keyboard")
     public Keyboard keyboard(){
@@ -41,31 +46,28 @@ public class KakaoRestController {
         Photo photo = new Photo();
         MessageButton messageButton = new MessageButton();
 
-        //사용자가 사진을 던질시 텍스트, 던진사진, 이동시킬 링크를 보낸다
+        /**
+         * 사용자가 사진을 던질시 사진의 경로와 사용자의 user_key를 memory db에 삽입하고,
+         * 사용자가 올리 사진을 다시 반환하여, 등록되었고 비교중이니 5초후에 닮았어? 라고 외쳐봐.. 라는 메세지
+         */
+
         if("photo".equals(userMessage.getType())) {
             //텍스트
-            message.setText("당신이 보낸 사진입니다");
+            message.setText("사진이 잘 등록되었고, 10초만 기다렸다 닮았어? 라고 외쳐봐!");
 
             //사용자가 보낸 사진 설정
             photo.setUrl(userMessage.getContent());
-            //사용자가 보낸 사진 설정 중
+            //사용자가 보낸 사진 memoryDB 에 올림
 
 
             photo.setWidth(300);photo.setHeight(300);
             message.setPhoto(photo);
 
-
-
-
-
-
-            //이동시킬 링크(메세지 버튼)
-            messageButton.setLabel("이제 수학사이트 공부하러 갈래?");
-            messageButton.setUrl("http://www.ebsmath.co.kr");
-            message.setMessage_button(messageButton);
             //메세지를 삽입하자
             resultMessage.setMessage(message);
             return resultMessage;
+
+
 
         }else {
             //사용자가 정우성이란 말을 입력했을때

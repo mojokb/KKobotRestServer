@@ -9,6 +9,7 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.util.UUID;
@@ -18,10 +19,14 @@ import java.util.UUID;
  */
 public class AwsServiceImpl implements AwsService {
 
-
     @Override
     public String uploadUserPicToS3(String picUrl) {
         String rtnS3Url=null;
+
+        /**
+         * AWS Service를 사용하기 위한 필수 요소
+         * have to refactoring.
+         */
         AWSCredentials credentials = null;
         //IAM의 키값을 가져온다
         try {
@@ -33,6 +38,8 @@ public class AwsServiceImpl implements AwsService {
                             "location (~/.aws/credentials), and is in valid format.",
                     e);
         }
+
+
 
         //아시아 북동서버 ^^의 S3 버킷을 키값을 통해 가져온다
         AmazonS3 s3 = new AmazonS3Client(credentials);
